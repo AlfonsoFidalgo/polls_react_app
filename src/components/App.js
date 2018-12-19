@@ -6,31 +6,51 @@ import NewPoll from './NewPoll';
 
 class App extends React.Component {
     state = {
-        activePollId: 11047,
-        pollsList: [11047,1,2,3,4]
+        initialPolls: [1],
+        activePoll: null,
+        polls: []
+    }
+
+    componentDidMount(){
+        axios.get(`https://polls.apiblueprint.org/questions/${this.state.initialPolls[0]}`)
+        .then(response => {
+            this.setState({polls: [... this.state.polls, response.data]});
+            this.setState({activePoll: this.state.polls[0]});
+        })
+        .catch(err => console.log(err))
     }
 
     onPollSubmit = (question, choices) => {
-        //wire axios up
-        // axios.post('https://polls.apiblueprint.org/questions', 
-        //     {'body': {'question': question, 'choices': choices}})
+        axios({
+            method: 'post',
+            url: 'https://polls.apiblueprint.org/questions',
+            data: {
+                question: question,
+                choices: choices
+            }
+        }).then(response => {
+            this.setState({polls: [... this.state.polls, response.data]})
+        }).catch(err => console.log(err));
+    }
 
-        //axios promise should return the new poll id
-        //poll id should be included in this.state.pollsList
+    pollSelect = (poll) => {
+        this.setState({activePoll: poll})
     }
 
     render(){
         return (
             <div>
                 <header><h1>Polls React App</h1></header>
-                <div>
+                <div className="ui container">
                     <NewPoll onPollSubmit={this.onPollSubmit}/>
                 </div>
                 <div>
-                    <PollsList pollsList={this.state.pollsList}/>
+                    <PollsList
+                    polls={this.state.polls}
+                    pollSelect={this.pollSelect}/>
                 </div>
                 <div>
-                    <PollDetails/>
+                    <PollDetails activePoll={this.state.activePoll}/>
                 </div>
             </div>
         );

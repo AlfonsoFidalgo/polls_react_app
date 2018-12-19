@@ -2,18 +2,22 @@ import React from 'react';
 
 class NewPoll extends React.Component {
     state = {
-        question: '',
+        question: 'Any questions?',
         options: ['yes', 'no']
     };
 
-    onInputChange = (e) => {
+    onQuestionChange = (e) => {
         this.setState({ question: e.target.value })
+    };
+
+    onOptionsChange = (e) => {
+        this.setState({ options: e.target.value.split(',') })
     };
 
     onFormSubmit = (e) => {
         e.preventDefault();
         this.props.onPollSubmit(this.state.question, this.state.options)
-    }
+    };
 
     render(){
         return (
@@ -26,8 +30,17 @@ class NewPoll extends React.Component {
                         <input 
                             type="text" 
                             value={this.state.question}
-                            onChange={this.onInputChange}/>
+                            onChange={this.onQuestionChange}/>
                     </div>
+                    <div className="field">
+                        <label><b>Options (separated with commas):</b></label>
+                        <input 
+                            type="text" 
+                            value={this.state.options}
+                            onChange={this.onOptionsChange}>
+                        </input>
+                    </div>
+                    <button className="ui button" type="submit">Submit</button>
                 </form>
             </div>
         )
