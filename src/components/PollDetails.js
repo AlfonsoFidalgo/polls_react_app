@@ -3,10 +3,6 @@ import axios from 'axios';
 
 
 class PollDetails extends React.Component {
-    state = {
-        question: '',
-        choices: []
-    }
 
     renderedChoices(){
         return this.props.activePoll.choices.map(choice => {
@@ -14,6 +10,7 @@ class PollDetails extends React.Component {
                 <div key={choice.url}>
                     <div>{choice.choice}</div>
                     <div>{choice.votes}</div>
+                    <div><a>VOTE</a></div>
                 </div>
             )
             }
